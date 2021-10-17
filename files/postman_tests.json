@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "145b53a4-2561-44b5-b5b0-f5d8b480ba32",
+		"_postman_id": "96026ceb-7197-42de-8b02-bb645190cc5a",
 		"name": "movies API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e12055f8-1371-4aeb-aef5-3ae1ebae7797",
 						"exec": [
 							"pm.test(\"Запрос первой страницы\", function () {",
 							"     pm.response.to.be.ok;",
@@ -19,7 +18,7 @@
 							"     pm.response.to.be.json;",
 							"     var jsonData = pm.response.json();",
 							"     var count = jsonData.count",
-							"     pm.expect(count/50).to.eql(jsonData.total_pages);",
+							"     pm.expect(Math.ceil(count/50)).to.eql(jsonData.total_pages);",
 							"     pm.expect(jsonData.prev).to.eql(null);",
 							"     pm.expect(jsonData.next).to.eql(2);",
 							"     postman.setEnvironmentVariable(\"movieUuid\", jsonData.results[0].id);",
@@ -106,7 +105,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f15892ba-a616-4402-be97-6329feb6c546",
 						"exec": [
 							"pm.test(\"Запрос второй страницы\", function () {",
 							"     pm.response.to.be.ok;",
@@ -114,7 +112,7 @@
 							"     pm.response.to.be.json;",
 							"     var jsonData = pm.response.json();",
 							"     var count = jsonData.count",
-							"     pm.expect(count/50).to.eql(jsonData.total_pages);",
+							"     pm.expect(Math.ceil(count/50)).to.eql(jsonData.total_pages);",
 							"     pm.expect(jsonData.prev).to.eql(1);",
 							"     pm.expect(jsonData.next).to.eql(3);",
 							"});",
@@ -132,7 +130,7 @@
 							"    \"properties\": {",
 							"        \"count\": {\"type\": \"integer\"},",
 							"        \"total_pages\": {\"type\": \"integer\"},",
-							"        \"prev\": {\"type\": \"null\"},",
+							"        \"prev\": {\"type\": \"integer\"},",
 							"        \"next\": {\"type\": \"integer\"},",
 							"        \"results\": {\"type\": \"array\",",
 							"            \"items\": {\"type\": \"object\",",
@@ -206,7 +204,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "7998a5a3-a1f0-4db3-ae2c-8691cb1853a5",
 						"exec": [
 							"pm.test(\"Запрос последней страницы\", function () {",
 							"     pm.response.to.be.ok;",
@@ -214,7 +211,7 @@
 							"     pm.response.to.be.json;",
 							"     var jsonData = pm.response.json(),",
 							"         count = jsonData.count,",
-							"         pagesCount = count/50;",
+							"         pagesCount = Math.ceil(count/50);",
 							"     pm.expect(pagesCount).to.eql(jsonData.total_pages);",
 							"     pm.expect(jsonData.prev).to.eql(pagesCount-1);",
 							"     pm.expect(jsonData.next).to.eql(null);",
@@ -307,9 +304,15 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e0562d43-0ef0-4c3c-a034-92e319b09416",
 						"exec": [
-							"pm.test(\"Запрос последней страницы\", function () {",
+							"pm.test(\"Устаноска UUID\", function () {",
+							"    pm.sendRequest(\"127.0.0.1:8000/api/v1/movies/\", function (err, response) {",
+							"      var jsonData = response.json();",
+							"      postman.setEnvironmentVariable(\"movieUuid\", jsonData.results[0].id);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Запрос фильма по UUID\", function () {",
 							"     pm.response.to.be.ok;",
 							"     pm.response.to.be.withBody;",
 							"     pm.response.to.be.json;",
@@ -381,9 +384,8 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e0c760eb-c53a-4177-b0dc-8bb739c3886a",
 						"exec": [
-							"pm.test(\"Запрос последней страницы\", function () {",
+							"pm.test(\"Запрос фильма по несуществующему UUID\", function () {",
 							"     pm.response.to.be.notFound;",
 							"});"
 						],
@@ -413,6 +415,5 @@
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
