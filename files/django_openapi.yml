@@ -38,7 +38,7 @@ paths:
                     type: integer
                     description: Номер следующей страницы
                     example: 2
-                  result:
+                  results:
                     $ref: "#/components/schemas/Movie"
   
   /v1/movies/{id}:
