@@ -1,9 +1,9 @@
-openapi: 3.0.0
+openapi: 3.0.1
 info:
   title: Movies ListApi
   version: v1
 paths:
-  /v1/movies/:
+  /api/v1/movies/:
     get:
       description: ""
       parameters:
@@ -39,9 +39,11 @@ paths:
                     description: Номер следующей страницы
                     example: 2
                   results:
-                    $ref: "#/components/schemas/Movie"
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Movie"
   
-  /v1/movies/{id}:
+  /api/v1/movies/{id}:
     get:
       description: ""
       parameters:
@@ -120,4 +122,3 @@ components:
             type: string
             description: Имя сценариста
             example: Drama                
-  
